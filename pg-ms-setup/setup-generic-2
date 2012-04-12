@@ -11,4 +11,5 @@ sudo mkdir -p /var/lib/postgresql/.ssh
 sudo cp /tmp/pg-ms-setup/ssh/id_rsa /var/lib/postgresql/.ssh
 sudo cp /tmp/pg-ms-setup/ssh/id_rsa.pub /var/lib/postgresql/.ssh/authorized_keys
 sudo chown -R postgres:postgres /var/lib/postgresql/.ssh
+sudo chmod go-r /var/lib/postgresql/.ssh/id_rsa
 sudo chmod go-w /var/lib/postgresql/.ssh /var/lib/postgresql/.ssh/authorized_keys

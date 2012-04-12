@@ -1,0 +1,2 @@
+host    replication     postgres        33.33.33.13/32              trust
+host    replication     postgres        fe80::a00:27ff:fe41:eaea/64 trust

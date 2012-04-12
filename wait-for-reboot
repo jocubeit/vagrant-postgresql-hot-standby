@@ -1,0 +1,8 @@
+#!/bin/bash
+HOST=$TARGET
+echo "Waiting for reboot on $HOST . . ."
+until [ `netcat -z -w 5 $HOST 22 2>/dev/null; echo $?` = "0" ]; do
+  sleep 1
+done
+echo "Brief pause for services to finish starting . . ."
+sleep 10

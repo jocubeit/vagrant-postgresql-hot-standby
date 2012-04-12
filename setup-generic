@@ -1,0 +1,13 @@
+echo ""
+echo "----------------------------------------------------------------------------"
+echo ""
+echo "  Setting up $TARGET"
+echo ""
+echo "----------------------------------------------------------------------------"
+echo ""
+$VSCP -r ./pg-ms-setup $ADMIN@$TARGET:/tmp/
+# Uncomment-out the next three lines for a full update/upgrade
+# $VSSH $ADMIN@$TARGET "/tmp/pg-ms-setup/setup-generic-1"
+# ./wait-for-reboot
+# $VSSH $ADMIN@$TARGET "sudo mount.vboxsf -w v-root /vagrant"
+$VSSH $ADMIN@$TARGET "/tmp/pg-ms-setup/setup-generic-2"

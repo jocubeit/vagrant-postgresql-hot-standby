@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# If a vagrant VM, refresh vbox guest additions
+VROOT=/vagrant
+if [ -d "$VROOT" ]; then
+  cp /vagrant/vagrant-guest /tmp/vagrant-guest
+  exec bash -c "/tmp/vagrant-guest"
+fi
+
+# Update packages and upgrade system
+
+# Uncomment to prevent upgrading the kernel and/or Grub
+# sudo bash -c 'echo "linux-image-`uname -r`" hold | dpkg --set-selections'
+# sudo bash -c 'echo "grub-common" hold | dpkg --set-selections'
+# sudo bash -c 'echo "grub-pc" hold | dpkg --set-selections'
+
+sudo apt-get -y update
+sudo apt-get -y install dkms
+# If you did want to upgrade the kernel and grub (commenting-out the section above,
+# you'd want the following message).
+echo ""
+echo "----------------------------------------------------------------------------"
+echo "  On Vagrant, when asked for a disk for grub, specify the VBOX-HARDDISK one."
+echo "----------------------------------------------------------------------------"
+echo ""
+sudo apt-get -y upgrade
+sudo reboot

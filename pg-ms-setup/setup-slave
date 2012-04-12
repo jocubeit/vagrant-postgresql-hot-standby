@@ -1,0 +1,3 @@
+sudo cp /vagrant/postgresql.conf-slave /etc/postgresql/9.1/main/postgresql.conf
+sudo cp /vagrant/recovery.conf-slave /var/lib/postgresql/9.1/main/recovery.conf
+sudo service postgresql start

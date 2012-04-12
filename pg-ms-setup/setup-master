@@ -1,0 +1,29 @@
+sudo service postgresql stop
+
+# Copy the master security (pg_hba.conf) and config (postgresql) files into place
+sudo bash -c "cat /vagrant/pg_hba.conf-master-append >>/etc/postgresql/9.1/main/pg_hba.conf"
+sudo cp /vagrant/postgresql.conf-master /etc/postgresql/9.1/main/postgresql.conf
+
+# Make a place for the WAL archives to go
+sudo mkdir -p /var/lib/postgresql/9.1/main/archive
+sudo chown -R postgres:postgres /var/lib/postgresql/9.1/main/archive
+
+sudo service postgresql start
+
+# Liberalize the sudo capabilities for the setup user - you might remove this later
+sudo bash -c "echo -e 'vagrant\tALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
+
+# Set ssh so we don't have to manually verify the host
+sudo -u postgres cp /vagrant/pg-ms-setup/ssh/config /var/lib/postgresql/.ssh
+
+echo ""
+echo "----------------------------------------------------------------------------"
+echo ""
+echo "  Syncing Master to Slave"
+echo ""
+echo "----------------------------------------------------------------------------"
+echo ""
+# Sync the database in its current state to the slave
+sudo -u postgres psql -d postgres -c "select pg_start_backup('initial')"
+sudo -u postgres rsync -a -v -e ssh /var/lib/postgresql/9.1/main/ 33.33.33.13:/var/lib/postgresql/9.1/main/ --exclude postmaster.pid
+sudo -u postgres psql -d postgres -c "select pg_stop_backup()"

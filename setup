@@ -1,0 +1,39 @@
+export VSSH="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $HOME/.vagrant.d/insecure_private_key"
+export VSCP="scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $HOME/.vagrant.d/insecure_private_key"
+
+export ADMIN=vagrant
+export TARGET=master
+./setup-generic
+
+export TARGET=slave
+./setup-generic
+
+echo ""
+echo "----------------------------------------------------------------------------"
+echo ""
+echo "  Setting up the PostgreSQL Master and Slave"
+echo ""
+echo "----------------------------------------------------------------------------"
+echo ""
+$VSSH $ADMIN@slave "sudo service postgresql stop"
+$VSSH $ADMIN@master "/tmp/pg-ms-setup/setup-master"
+$VSSH $ADMIN@slave "/tmp/pg-ms-setup/setup-slave"
+
+echo ""
+echo "----------------------------------------------------------------------------"
+echo ""
+echo "  To try it out:"
+echo ""
+echo "    vagrant ssh master"
+echo "      sudo -u postgres psql -d postgres -c \"create database sampledb;\""
+echo "      sudo -u postgres psql -d sampledb -c \"create table tab (val int); insert into tab values (42);\""
+echo "      exit"
+echo ""    
+echo "    vagrant ssh slave"
+echo "      sudo bash"
+echo "      su postgres -c 'psql -d sampledb -c \"select * from tab;\"'"
+echo "      exit"
+echo "      exit"
+echo ""
+echo "----------------------------------------------------------------------------"
+echo ""

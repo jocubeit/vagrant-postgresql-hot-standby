@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Install the "Guest Additions" for VirtualBox
+# On a headless system, this will generate an error:
+#   (Could not find the X.Org or XFree86 Window System.)
+# Ignore it.
+
+source /vagrant/env
+
+sudo apt-get -y install build-essential linux-headers-`uname -r`
+mkdir -p /tmp/guest-build
+cd /tmp/guest-build
+wget -q -c http://download.virtualbox.org/virtualbox/$VIRTUALBOX_VERSION/VBoxGuestAdditions_$VIRTUALBOX_VERSION.iso
+sudo umount /mnt
+sudo mount VBoxGuestAdditions_$VIRTUALBOX_VERSION.iso -o loop /mnt
+sudo /mnt/VBoxLinuxAdditions.run
+sudo umount /mnt
+echo ""
+echo "----------------------------------------------------------------"
+echo "  NOTE: IGNORE: Installing the Window System drivers ...fail!"
+echo ""
+echo "  To verify that the new guest additions are in,"
+echo ""
+echo "    sudo tail -20 /var/log/dmesg"
+echo ""
+echo "  and look for 'vboxguest: Successfully loaded version $VIRTUALBOX_VERSION'"
+echo "----------------------------------------------------------------"
+echo ""
